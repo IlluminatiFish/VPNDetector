@@ -10,6 +10,7 @@
 from bs4 import BeautifulSoup
 import requests, re
 
+
 def cleanHTML(raw_html):
   cleanr = re.compile('<.*?>')
   cleantext = re.sub(cleanr, '', str(raw_html))
@@ -29,9 +30,13 @@ def getProvider(ip):
         return cleanHTML(spans[1])
 
 raw_ip = input("[+] IP: ")
+if getProvider(raw_ip) is not None:
+    print("IP:",raw_ip)
+    print("Provider:",getProvider(raw_ip).replace(" ", "")+ "VPN")
 
-print("IP:",raw_ip)
-print("Provider:",getProvider(raw_ip).replace(" ", "")+ "VPN")
+
+  
+    
 
 
   
