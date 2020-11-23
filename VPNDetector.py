@@ -1,5 +1,5 @@
 #
-# VPNDetector v1.2
+# VPNDetector v1.4
 #
 # This script should be used primarly for
 # singular IP lookups 
@@ -17,6 +17,8 @@ def cleanHTML(raw_html):
     cleaned = re.sub(cleaner, '', str(raw_html))
     return cleaned.strip()
 
+def clearParagraph(raw_paragraph):
+    return str(raw_paragraph).split('is part of ')[1].split('.')[0]
 
 def getProvider(ip):
     spans.clear()
@@ -33,9 +35,12 @@ def getProvider(ip):
         if cleanHTML(spans[2]) == "Not Anonymous" or cleanHTML(spans[2]) == "Possibly Anonymous" or cleanHTML(spans[2]) == "Likely Anonymous":
             return None
 
-
-        provider = cleanHTML(spans[2]).upper()
-        return provider
+        
+       if cleanHTML(spans[2]) == '': #Catches Proxies
+            paras = soup.find_all('p')
+            return clearParagraph(paras[0]).upper()
+        
+        return cleanHTML(spans[2]).upper()
 
 
 ip = input("[+] IP: ")
