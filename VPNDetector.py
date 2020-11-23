@@ -1,5 +1,5 @@
 #
-# VPNDetector
+# VPNDetector v1.2
 #
 # This script should be used primarly for
 # singular IP lookups 
@@ -10,29 +10,38 @@
 from bs4 import BeautifulSoup
 import requests, re
 
+spans = []
 
 def cleanHTML(raw_html):
-  cleanr = re.compile('<.*?>')
-  cleantext = re.sub(cleanr, '', str(raw_html))
-  return cleantext.strip()
+    cleaner = re.compile('<.*?>')
+    cleaned = re.sub(cleaner, '', str(raw_html))
+    return cleaned.strip()
 
 
-spans = []
 def getProvider(ip):
     spans.clear()
-    r = requests.get('https://spur.us/context/{}'.format(ip))
-    soup = BeautifulSoup(r.text, 'html.parser')
-    for i in soup.find_all('span'):
-        spans.append(i)
-    if len(spans) > 1:
-        if cleanHTML(spans[1]) == "Not Anonymous" or cleanHTML(spans[1]) == "Possibly Anonymous":
-            return None
-        return cleanHTML(spans[1])
+    
+    request = requests.get('https://spur.us/context/{}'.format(ip))
+    
+    soup = BeautifulSoup(request.text, 'html.parser')
+    
+    for span in soup.find_all('span'):
+        spans.append(span)
 
-raw_ip = input("[+] IP: ")
-if getProvider(raw_ip) is not None:
-    print("IP:",raw_ip)
-    print("Provider:",getProvider(raw_ip).replace(" ", "")+ "VPN")
+    if len(spans) > 2:
+
+        if cleanHTML(spans[2]) == "Not Anonymous" or cleanHTML(spans[2]) == "Possibly Anonymous" or cleanHTML(spans[2]) == "Likely Anonymous":
+            return None
+
+
+        provider = cleanHTML(spans[2]).upper()
+        return provider
+
+
+ip = input("[+] IP: ")
+result = getProvider(ip)
+print('Provider:',result, '~~~ IP:',ip)
+
 
 
   
