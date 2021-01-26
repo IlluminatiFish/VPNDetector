@@ -36,7 +36,7 @@ def getProvider(ip):
             return None
 
         
-       if cleanHTML(spans[2]) == '': #Catches Proxies
+        if cleanHTML(spans[2]) == '': #Catches Proxies
             paras = soup.find_all('p')
             return clearParagraph(paras[0]).upper()
         
