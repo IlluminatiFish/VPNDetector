@@ -15,12 +15,3 @@ def get_vpn_provider(ip):
 ip = input("[+] IP: ")
 result = get_vpn_provider(ip)
 print('Provider:', result)
-
-
-
-  
-    
-
-
-  
-    
